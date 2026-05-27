@@ -29,6 +29,11 @@ val DISALLOW_SYMBOLS = SettingsKey(
     default = true
 )
 
+val SUPPRESS_TRAILING_PERIOD = SettingsKey(
+    key = booleanPreferencesKey("suppress_trailing_period"),
+    default = false
+)
+
 val PREFER_BLUETOOTH = SettingsKey(
     key = booleanPreferencesKey("prefer_bluetooth_recording"),
     default = false

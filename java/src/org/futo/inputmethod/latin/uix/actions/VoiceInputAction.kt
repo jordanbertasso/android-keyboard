@@ -32,6 +32,7 @@ import org.futo.inputmethod.latin.uix.ActionWindow
 import org.futo.inputmethod.latin.uix.CAN_EXPAND_SPACE
 import org.futo.inputmethod.latin.uix.CloseResult
 import org.futo.inputmethod.latin.uix.DISALLOW_SYMBOLS
+import org.futo.inputmethod.latin.uix.SUPPRESS_TRAILING_PERIOD
 import org.futo.inputmethod.latin.uix.ENABLE_SOUND
 import org.futo.inputmethod.latin.uix.KeyboardManagerForAction
 import org.futo.inputmethod.latin.uix.PREFER_BLUETOOTH
@@ -119,6 +120,7 @@ private class VoiceInputActionWindow(
     val context = manager.getContext()
 
     private var shouldPlaySounds: Boolean = false
+    private var suppressTrailingPeriod: Boolean = false
     private fun loadSettings(): RecognizerViewSettings {
         val enableSound = context.getSetting(ENABLE_SOUND)
         val verboseFeedback = false//context.getSetting(VERBOSE_PROGRESS)
@@ -140,6 +142,7 @@ private class VoiceInputActionWindow(
         }
 
         shouldPlaySounds = enableSound
+        suppressTrailingPeriod = context.getSetting(SUPPRESS_TRAILING_PERIOD)
 
         return RecognizerViewSettings(
             shouldShowInlinePartialResult = false,
@@ -266,7 +269,10 @@ private class VoiceInputActionWindow(
         wasFinished = true
 
         manager.getLifecycleScope().launch(Dispatchers.Main) {
-            val sanitized = ModelOutputSanitizer.sanitize(result, inputTransaction.textContext)
+            var sanitized = ModelOutputSanitizer.sanitize(result, inputTransaction.textContext)
+            if (suppressTrailingPeriod && sanitized.endsWith('.')) {
+                sanitized = sanitized.dropLast(1)
+            }
             inputTransaction.commit(sanitized)
             manager.announce(result)
             manager.closeActionWindow()
