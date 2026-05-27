@@ -7,6 +7,7 @@ import org.futo.inputmethod.latin.uix.ANIMATE_BUBBLE
 import org.futo.inputmethod.latin.uix.AUDIO_FOCUS
 import org.futo.inputmethod.latin.uix.CAN_EXPAND_SPACE
 import org.futo.inputmethod.latin.uix.DISALLOW_SYMBOLS
+import org.futo.inputmethod.latin.uix.SUPPRESS_TRAILING_PERIOD
 import org.futo.inputmethod.latin.uix.ENABLE_SOUND
 import org.futo.inputmethod.latin.uix.PREFER_BLUETOOTH
 import org.futo.inputmethod.latin.uix.USE_PERSONAL_DICT
@@ -69,6 +70,12 @@ val VoiceInputMenu = UserSettingsMenu(
         userSettingToggleDataStore(
             title = R.string.voice_input_settings_suppress_symbols,
             setting = DISALLOW_SYMBOLS
+        ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
+
+        userSettingToggleDataStore(
+            title = R.string.voice_input_settings_suppress_trailing_period,
+            subtitle = R.string.voice_input_settings_suppress_trailing_period_subtitle,
+            setting = SUPPRESS_TRAILING_PERIOD
         ).copy(visibilityCheck = visibilityCheckNotSystemVoiceInput),
 
         userSettingToggleDataStore(
